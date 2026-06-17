@@ -1,45 +1,22 @@
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
 class Solution {
 public:
-    ListNode* reverseList(ListNode* head) {
-        ListNode* prev = nullptr;
-        while (head) {
-            ListNode* nextNode = head->next;
-            head->next = prev;
-            prev = head;
-            head = nextNode;
-        }
-        return prev;
-    }
-    bool isPalindrome(ListNode* head) {
-        ListNode* fast=head;
-        ListNode* slow=head;
-        while(fast->next != NULL && fast->next->next != NULL){
-            slow=slow->next;
-            fast=fast->next->next;
-        }
-        ListNode* newhead = reverseList(slow->next);
-        ListNode* first=head;
-        ListNode* second=newhead;
-        while(second != NULL){
-            if(first->val != second->val){
-                reverseList(newhead);
-                return false;
+    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+        stack<int> st;
+        unordered_map<int, int> nge;
+        for(int i = nums2.size() - 1; i >= 0; i--) {
+            while(!st.empty() && st.top() <= nums2[i]) {
+                st.pop();
             }
-            first=first->next;
-            second=second->next;
+            if(st.empty())
+                nge[nums2[i]] = -1;
+            else
+                nge[nums2[i]] = st.top();
+            st.push(nums2[i]);
         }
-        reverseList(newhead);
-
-        return true;
+        vector<int> ans;
+        for(int x : nums1) {
+            ans.push_back(nge[x]);
+        }
+        return ans;
     }
 };
